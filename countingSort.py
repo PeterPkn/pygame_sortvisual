@@ -1,14 +1,43 @@
 import random
 from datetime import datetime
+import sys
 
 
-length = 100000000
-sortingArray = list(range(0,length))
+sys.setrecursionlimit(4000)
+
+length = 20000
+sortingArray = [0]*length
 for idx,elem in enumerate(sortingArray):
     sortingArray[idx] = random.randint(0,9)
 
 #print(sortingArray)
 
+def swapElem(idx1, idx2, array):
+    elem1 = array[idx1]
+    array[idx1] = array[idx2]
+    array[idx2] = elem1
+
+def quickSort(array, low, high):
+    if low<high:
+        pi = partition(array, low, high)
+
+        quickSort(array,low, pi-1)
+        quickSort(array, pi+1, high)
+
+def partition(array, low, high):
+    
+    pivot = array[high]
+    small = low-1
+    index = low
+    while index <= high:
+        
+        if array[index]<pivot:
+            small+=1
+            swapElem(index, small, array)
+
+        index+=1
+    swapElem(small+1,high,array)
+    return small+1
 
 
 def countingSort(array):
@@ -40,6 +69,7 @@ print("start")
 start = datetime.now()
 
 sortingArray = countingSort(sortingArray)
+#quickSort(sortingArray,0,len(sortingArray)-1)
 done = datetime.now()-start
 print("END")
 print("Time taken: " + str(done))
