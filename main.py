@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 
-WIDTH = 1300
+WIDTH = 1600
 HEIGHT = 480
 FPS = 30
 
@@ -30,7 +30,7 @@ compares = 0
 
 
 #ARRAY to sort
-length = 200
+length = 10
 sortingArray = list(range(0,length))
 for idx,elem in enumerate(sortingArray):
     sortingArray[idx] = random.random()*100
@@ -42,13 +42,16 @@ def swapElem(idx1, idx2, array):
     array[idx1] = array[idx2]
     array[idx2] = elem1
 
-def drawArray(array):
+def drawArray(array, index, swapper):
     
     rectWidth = WIDTH / len(array)
-    margin = rectWidth/10
+    margin = rectWidth/20
 
     for idx, elem in enumerate(array):
-        pygame.draw.rect(screen, BLUE, pygame.Rect(idx*rectWidth+margin,HEIGHT,rectWidth-2*margin,-elem*4))
+        if(idx != index and idx != swapper):
+            pygame.draw.rect(screen, BLUE, pygame.Rect(idx*rectWidth+margin,HEIGHT,rectWidth-2*margin,-elem*4))
+        else:
+            pygame.draw.rect(screen, RED, pygame.Rect(idx*rectWidth+margin,HEIGHT,rectWidth-2*margin,-elem*4))
 
 
 ## group all the sprites together for ease of update
@@ -87,7 +90,7 @@ def partition(array, low, high):
         compares+=1
         
         screen.fill(WHITE)
-        drawArray(sortingArray)
+        drawArray(sortingArray, index, small)
 
         text = font.render("Comps: "+str(compares)+" Time=" + str(datetime.now()-starttime), True, GREEN, BLUE)
         textRect = text.get_rect() 
@@ -118,32 +121,23 @@ while running:
 
     #BUBBLE SORT
 
-    # print(index)
-    # print(len(sortingArray))
-    # if(index+1>=len(sortingArray)):
-    #     index = 0
+    
+    if(index+1>=len(sortingArray)):
+        index = 0
 
-    # if(sortingArray[index]>sortingArray[index+1]):
-    #     compares+=1
-    #     swapElem(index, index+1, sortingArray)
+    if(sortingArray[index]>sortingArray[index+1]):
+        compares+=1
+        swapElem(index, index+1, sortingArray)
     
 
     
-    #index += 1
+    index += 1
 
     #QUICK SORT
 
-    quickSort(sortingArray,0,len(sortingArray)-1)
+    #quickSort(sortingArray,0,len(sortingArray)-1)
 
-    if(sorted(sortingArray)):
-        f = open("compStats.txt", "a")
-        #f.write(str(compares)+" ")
-        f.close()
-        #time.sleep(2)
-        compares = 0
-        # sortingArray = list(range(0,length))
-        # for idx,elem in enumerate(sortingArray):
-        #     sortingArray[idx] = random.random()*100
+    
 
 
     #1 Process input/events
@@ -166,7 +160,7 @@ while running:
     textRect.center = (50, 50)
     screen.blit(text, textRect) 
 
-    drawArray(sortingArray)
+    drawArray(sortingArray, index, index+1)
 
     
 
@@ -178,6 +172,22 @@ while running:
     ########################
 
     ## Done after drawing everything to the screen
-    pygame.display.flip()       
+    pygame.display.flip()      
+
+    if(sorted(sortingArray)):
+        f = open("compStats.txt", "a")
+        #f.write(str(compares)+" ")
+        f.close()
+        #time.sleep(5)
+        while True:
+            print("SORTED")
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.display.quit()
+                    pygame.quit()
+        compares = 0
+        # sortingArray = list(range(0,length))
+        # for idx,elem in enumerate(sortingArray):
+        #     sortingArray[idx] = random.random()*100 
 
 pygame.quit()
