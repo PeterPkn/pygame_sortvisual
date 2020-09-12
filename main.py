@@ -2,11 +2,12 @@ import pygame
 from pygame.locals import *
 import random
 import time
+from datetime import datetime
 
 
 WIDTH = 1300
 HEIGHT = 480
-FPS = 400
+FPS = 30
 
 # Define Colors 
 WHITE = (255, 255, 255)
@@ -14,6 +15,8 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+
+starttime = datetime.now()
 
 ## initialize pygame and create window
 pygame.init()
@@ -27,7 +30,7 @@ compares = 0
 
 
 #ARRAY to sort
-length = 100
+length = 200
 sortingArray = list(range(0,length))
 for idx,elem in enumerate(sortingArray):
     sortingArray[idx] = random.random()*100
@@ -86,9 +89,9 @@ def partition(array, low, high):
         screen.fill(WHITE)
         drawArray(sortingArray)
 
-        text = font.render(str(compares), True, GREEN, BLUE)
+        text = font.render("Comps: "+str(compares)+" Time=" + str(datetime.now()-starttime), True, GREEN, BLUE)
         textRect = text.get_rect() 
-        textRect.center = (50, 50)
+        textRect.center = (300, 20)
         screen.blit(text, textRect) 
 
         pygame.display.flip()
@@ -138,9 +141,9 @@ while running:
         f.close()
         #time.sleep(2)
         compares = 0
-        sortingArray = list(range(0,length))
-        for idx,elem in enumerate(sortingArray):
-            sortingArray[idx] = random.random()*100
+        # sortingArray = list(range(0,length))
+        # for idx,elem in enumerate(sortingArray):
+        #     sortingArray[idx] = random.random()*100
 
 
     #1 Process input/events
